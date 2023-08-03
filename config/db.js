@@ -1,11 +1,14 @@
 import { createPool } from 'mysql2/promise'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 
 export const pool = createPool({
-    host: 'aws.connect.psdb.cloud',
-    user: 'ch6fqd8kcfc1xfqenh7p',
-    password: 'pscale_pw_OsPE1hUG8OUsoEvwAr49r1OBTyJSDkP97wXxH9UodmQ',
-    database: 'expressdb',
+    host: process.env.SQL_HOST,
+    user: process.env.SQL_USER,
+    password: process.env.SQL_PASSWORD,
+    database: process.env.SQL_DATABASE,
     ssl: {
         rejectUnauthorized: false
     }
