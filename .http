@@ -1,0 +1,22 @@
+//GET http://localhost:4100/api/users
+
+//POST http://localhost:4100/users
+//content-type: application/json
+
+//{
+//  "email": "majo@email.com",
+//  "password": "admin"
+//}
+
+//POST http://localhost:4100/api/login
+//content-type: application/json
+
+//{
+//  "email": "majo@email.com",
+//  "password": "admin"
+//}
+
+//POST http://localhost:4100/api/login
+
+GET http://localhost:4100/api/protected
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjozfSwiaWF0IjoxNjkxMTc5Njc5fQ.wv_VqzRm94J7hR6UVqbX4-EDUm4o-YctGh9JQt5txdY
