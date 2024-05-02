@@ -18,6 +18,11 @@ interface PaginationResultProducts {
 	brands: string[]
 	minPrice: number
 	maxPrice: number
+	categories: number[]
+	subcategories: number[]
+	numberCategories: number[]
+	numberBrands: number[]
+	numberSubCategories: number[]
 }
 
 export const BuildQueryPagination = async <T extends QueryResultRow>(
@@ -239,15 +244,52 @@ export const BuildQueryPaginationProducts = async <T extends QueryResultRow>(
 
 	const brands = new Set<string>()
 	const prices = new Set<number>()
+	const categories = new Set<number>()
+	const subcategories = new Set<number>()
 	const products: IProduct[] = rowsProducts
 	products.forEach((product) => {
 		brands.add(product.brand)
 		prices.add(product.price)
+		categories.add(Number(product.category))
+		subcategories.add(Number(product.subcategory))
 	})
 	const arrayBrands = Array.from(brands.values())
 	const arrayPrices = Array.from<number>(prices.values())
 	const minPrice = Math.min(...arrayPrices)
 	const maxPrice = Math.max(...arrayPrices)
+	const arrayCategories = Array.from(categories.values())
+	const arraySubCategories = Array.from(subcategories.values())
+
+	let numberCategories: number[] = []
+	let numberSubCategories: number[] = []
+	let numberBrands: number[] = []
+	arrayCategories.forEach((_) => {
+		numberCategories.push(0)
+	})
+	arraySubCategories.forEach((_) => {
+		numberSubCategories.push(0)
+	})
+	arrayBrands.forEach((_) => {
+		numberBrands.push(0)
+	})
+
+	products.forEach((product) => {
+		arrayCategories.forEach((category, index) => {
+			if (category === Number(product.category)) {
+				numberCategories[index]++
+			}
+		})
+		arraySubCategories.forEach((subcategory, index) => {
+			if (subcategory === Number(product.subcategory)) {
+				numberSubCategories[index]++
+			}
+		})
+		arrayBrands.forEach((brand, index) => {
+			if (brand === product.brand) {
+				numberBrands[index]++
+			}
+		})
+	})
 
 	query += ` LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`
 
@@ -257,5 +299,18 @@ export const BuildQueryPaginationProducts = async <T extends QueryResultRow>(
 	const { rows: countRows } = await pool.query<T>(queryCount, queryParamsCount)
 	const count = countRows[0].quantity
 
-	return { rows, count, limit, page, brands: arrayBrands, minPrice, maxPrice }
+	return {
+		rows,
+		count,
+		limit,
+		page,
+		brands: arrayBrands,
+		minPrice,
+		maxPrice,
+		categories: arrayCategories,
+		subcategories: arraySubCategories,
+		numberCategories,
+		numberBrands,
+		numberSubCategories,
+	}
 }

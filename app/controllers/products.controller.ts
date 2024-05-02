@@ -23,12 +23,24 @@ import { stockSchema } from "../validations/stockSchema"
 
 export const GetProducts = async (req: Request, res: Response) => {
 	try {
-		const { count, limit, rows, page, brands, minPrice, maxPrice } =
-			await BuildQueryPaginationProducts<IProduct>(
-				req,
-				["sku", "title", "name", "description", "brand"],
-				"products"
-			)
+		const {
+			count,
+			limit,
+			rows,
+			page,
+			brands,
+			minPrice,
+			maxPrice,
+			categories,
+			subcategories,
+			numberCategories,
+			numberBrands,
+			numberSubCategories,
+		} = await BuildQueryPaginationProducts<IProduct>(
+			req,
+			["sku", "title", "name", "description", "brand"],
+			"products"
+		)
 
 		const totalPages = Math.ceil(count / limit)
 		if (rows) {
@@ -40,7 +52,12 @@ export const GetProducts = async (req: Request, res: Response) => {
 					page,
 					brands,
 					minPrice,
-					maxPrice
+					maxPrice,
+					categories,
+					subcategories,
+					numberCategories,
+					numberBrands,
+					numberSubCategories
 				)
 			)
 		} else {

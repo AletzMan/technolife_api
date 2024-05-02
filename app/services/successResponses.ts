@@ -23,7 +23,12 @@ export const PaginationResponseProducts = (
 	currentPage: number,
 	brands: string[],
 	minPrice: number,
-	maxPrice: number
+	maxPrice: number,
+	categories: number[],
+	subcategories: number[],
+	numberCategories: number[],
+	numberBrands: number[],
+	numberSubCategories: number[]
 ) => {
 	return {
 		error: false,
@@ -35,6 +40,11 @@ export const PaginationResponseProducts = (
 			brands,
 			minPrice,
 			maxPrice,
+			categories,
+			subcategories,
+			numberCategories,
+			numberBrands,
+			numberSubCategories,
 		},
 	}
 	//.status(200)
