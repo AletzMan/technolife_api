@@ -3,20 +3,36 @@
   "version": "1.0.0",
   "description": "Technolife API ",
   "main": "index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "dev": "nodemon index"
+    "tsc": "tsc",
+    "dev": "ts-node-dev app/index.ts"
   },
   "author": "Alejandro Garcia",
   "license": "ISC",
   "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "@types/pg": "^8.11.5",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
+    "cryptr": "^6.3.0",
+    "dotenv": "^16.4.5",
     "express": "^4.18.2",
-    "mysql2": "^3.5.2"
+    "handlebars": "^4.7.8",
+    "jose": "^5.2.4",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.13",
+    "pg": "^8.11.5",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@types/cors": "^2.8.17",
+    "@types/morgan": "^1.9.9",
+    "@types/nodemailer": "^6.4.14",
+    "@types/paypal__checkout-server-sdk": "^1.0.8",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
   }
 }
