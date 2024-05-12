@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node dist/app/index.ts",
+    "start": "node build/app/index.js",
     "build": "tsc",
     "tsc": "tsc",
     "dev": "ts-node-dev app/index.ts"
