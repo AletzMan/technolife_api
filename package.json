@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "ts-node dist/index.ts",
-    "build": "tsc",
+    "start": "ts-node dest/index.ts",
+    "build": "ts-node build --output dest",
     "tsc": "tsc",
     "dev": "ts-node-dev app/index.ts"
   },
