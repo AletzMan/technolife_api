@@ -12,6 +12,7 @@ import orders from "./routes/orders.routes"
 import brand from "./routes/brand.routes"
 import customers from "./routes/customers.routes"
 import coupons from "./routes/coupons.routes"
+import main from "./routes/main.routes"
 import cors from "cors"
 import morgan from "morgan"
 import dotenv from "dotenv"
@@ -55,6 +56,7 @@ export class App {
 	}
 
 	routes() {
+		this.app.use("/", main)
 		this.app.use("/api", users)
 		this.app.use("/api", subcategories)
 		this.app.use("/api", categories)
