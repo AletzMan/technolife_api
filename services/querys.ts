@@ -1,5 +1,5 @@
 import { Request } from "express"
-import { pool } from "../../config/db"
+import { pool } from "../config/db"
 import { QueryResultRow } from "pg"
 
 export async function QueryAllRecords<T extends QueryResultRow>(

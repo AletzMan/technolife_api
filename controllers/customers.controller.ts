@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { IUser } from "../Interfaces/user"
+import { IUser, OldPasswordType } from "../Interfaces/user"
 import Cryptr from "cryptr"
 import {
 	CreateRecord,
@@ -32,10 +32,6 @@ import { authorizationSchema } from "../validations/authorizationSchema"
 import { useEditSchema } from "../validations/userEditSchema"
 import { BuildQueryPagination } from "../services/BuildQueryPagination"
 import { sign } from "../services/jwt_sign_verify"
-
-type PasswordType = {
-	password: string
-}
 
 const KEY_SECRET = process.env.KEY_SECRET_LOGIN as string
 const crypt = new Cryptr(KEY_SECRET)
@@ -171,58 +167,64 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 				},
 			])
 		}
+		if (userToUpdate.length > 0) {
+			const currentPassword = userData.currentPassword
 
-		//----VALIDAR SI EL PASSWORD ES IGUAL AL ACTUAL---//
-		if (userData.newPassword === PASSWORD_DECRYPT) {
-			throw new ZodError([
-				{
-					code: "custom",
-					message: "Your current password and your new password are the same",
-					path: ["confirmNewPassword"],
-				},
-			])
-		}
+			//----VALIDAR SI EL PASSWORD ES IGUAL AL ACTUAL---//
+			if (userData.newPassword === PASSWORD_DECRYPT) {
+				throw new ZodError([
+					{
+						code: "custom",
+						message: "Your current password and your new password are the same",
+						path: ["passwordConfirm"],
+					},
+				])
+			}
 
-		//----DESCIFRAR LOS PASSWORDS ANTERIORES----//
-		const oldPasswordsDecript = [] as PasswordType[]
-		userToUpdate[0].oldpasswords?.forEach((element) => {
-			const passDecrypt = crypt.decrypt(element.password)
-			oldPasswordsDecript.push({ password: passDecrypt })
-		})
+			//----DESCIFRAR LOS PASSWORDS ANTERIORES----//
+			const oldPasswords = userToUpdate[0].oldpasswords
+			if (oldPasswords.length > 0) {
+				const oldPasswordsDecript: OldPasswordType[] = []
+				userToUpdate[0].oldpasswords?.forEach((element, index) => {
+					const passDecrypt = crypt.decrypt(element.password)
+					console.log(passDecrypt, index)
+					oldPasswordsDecript.push({ password: passDecrypt })
+				})
 
-		//----VALIDAR SI EL PASSWORD YA HA SIDO UTILIZADO----//
-		if (
-			oldPasswordsDecript.filter((password) => password.password === userData.newPassword)
-				.length > 0
-		) {
-			throw new ZodError([
-				{
-					code: "custom",
-					message: "The password provided has been used before",
-					path: ["confirmNewPassword"],
-				},
-			])
-		}
+				//----VALIDAR SI EL PASSWORD YA HA SIDO UTILIZADO----//
+				if (
+					oldPasswordsDecript.filter(
+						(password) => password.password === userData.newPassword
+					).length > 0
+				) {
+					throw new ZodError([
+						{
+							code: "custom",
+							message: "The password provided has been used before",
+							path: ["confirmNewPassword"],
+						},
+					])
+				}
+				//----ENCRIPTAR EL NUEVO PASSWORD Y LOS PASSWORDS ANTERIORES----//
+			}
+			const passwordCrypt = crypt.encrypt(userData.newPassword)
 
-		//----ENCRIPTAR EL NUEVO PASSWORD Y LOS PASSWORDS ANTERIORES----//
-		const passwordCrypt = crypt.encrypt(userData.newPassword)
-		const oldPasswords = userToUpdate[0].oldpasswords
+			const updateOldPasswords = oldPasswords
+				? [...oldPasswords, { password: currentPassword }]
+				: [{ password: currentPassword }]
+			const oldPasswordsString = JSON.stringify(updateOldPasswords)
 
-		const updateOldPasswords = oldPasswords
-			? [...oldPasswords, { password: actualPassword }]
-			: [{ password: actualPassword }]
-		const oldPasswordsString = JSON.stringify(updateOldPasswords)
-
-		const result = await UpdateRecordByID(
-			id,
-			"users",
-			{ password: passwordCrypt, oldpasswords: oldPasswordsString },
-			["password", "oldpasswords"]
-		)
-		if (result) {
-			res.status(200).json(SuccessUpdate(result))
-		} else {
-			res.status(NotFoundError().status).json(NotFoundError().data)
+			const result = await UpdateRecordByID(
+				userToUpdate[0].id,
+				"customers",
+				{ password: passwordCrypt, oldpasswords: oldPasswordsString },
+				["password", "oldpasswords"]
+			)
+			if (result) {
+				res.status(200).json(SuccessUpdate(result))
+			} else {
+				res.status(NotFoundError().status).json(NotFoundError().data)
+			}
 		}
 	} catch (error) {
 		console.error(error)
