@@ -8,7 +8,7 @@
     "start": "node ./build/index.js",
     "build": "tsc",
     "tsc": "tsc",
-    "dev": "ts-node-dev index.ts"
+    "dev": "ts-node-dev api/index.ts"
   },
   "author": "Alejandro Garcia",
   "license": "ISC",
