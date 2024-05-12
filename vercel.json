@@ -2,13 +2,13 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/build/(.*)",
-            "destination": "/build"
+            "source": "./build/(.*)",
+            "destination": "./build"
         }
     ],
     "builds": [
         {
-            "src": "build/index.js",
+            "src": "./build/index.js",
             "use": "@now/node",
             "config": {
                 "maxLambdaSize": "15mb"
@@ -17,8 +17,8 @@
     ],
     "routes": [
         {
-            "src": "/(.*) ",
-            "dest": "/build/index.js"
+            "src": "./build(.*) ",
+            "dest": "./build/index.js"
         }
     ]
 }
