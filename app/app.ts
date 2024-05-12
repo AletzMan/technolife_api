@@ -14,6 +14,7 @@ import customers from "./routes/customers.routes"
 import coupons from "./routes/coupons.routes"
 import cors from "cors"
 import morgan from "morgan"
+import dotenv from "dotenv"
 
 export class App {
 	private app: Application
@@ -23,6 +24,7 @@ export class App {
 		this.settings()
 		this.middlewares()
 		this.routes()
+		dotenv.config()
 	}
 
 	settings() {
@@ -30,10 +32,26 @@ export class App {
 	}
 
 	middlewares() {
+		dotenv.config()
 		this.app.use(morgan("dev"))
-		this.app.use(cors())
 		this.app.use(express.json())
 		this.app.use(express.urlencoded({ extended: true }))
+		this.app.use(
+			cors({
+				origin: process.env.FRONT_END_URL,
+				credentials: true,
+				optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+			})
+		)
+		this.app.use(function (_req, res, next) {
+			res.header("Content-Type", "application/json;charset=UTF-8")
+			res.header("Access-Control-Allow-Credentials", "true")
+			res.header(
+				"Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept"
+			)
+			next()
+		})
 	}
 
 	routes() {

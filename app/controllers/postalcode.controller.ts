@@ -9,10 +9,10 @@ const URL_DIPOMEX_API = "https://api.tau.com.mx/dipomex/v1/"
 const API_KEY = process.env.DIPOMEX_API as string
 
 export const GetPostalCode = async (req: Request, res: Response) => {
-	const { postalcode } = req.query
-	console.log(postalcode)
+	const { cp } = req.query
+	console.log(cp)
 	try {
-		const response = await fetch(`${URL_DIPOMEX_API}codigo_postal?cp=${postalcode}`, {
+		const response = await fetch(`${URL_DIPOMEX_API}codigo_postal?cp=${cp}`, {
 			method: "GET",
 			headers: {
 				APIKEY: API_KEY,

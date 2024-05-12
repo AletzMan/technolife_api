@@ -32,7 +32,7 @@ export const GetProducts = async (req: Request, res: Response) => {
 			minPrice,
 			maxPrice,
 			categories,
-			subcategories,
+			subCategories,
 			numberCategories,
 			numberBrands,
 			numberSubCategories,
@@ -54,7 +54,7 @@ export const GetProducts = async (req: Request, res: Response) => {
 					minPrice,
 					maxPrice,
 					categories,
-					subcategories,
+					subCategories,
 					numberCategories,
 					numberBrands,
 					numberSubCategories
@@ -72,7 +72,7 @@ export const GetProducts = async (req: Request, res: Response) => {
 export const GetProduct = async (req: Request, res: Response) => {
 	const { id } = req.params
 	try {
-		const result = await QueryRecordByID<IProduct>(id, "products")
+		const result = await QueryRecordByID<IProduct>(id, "products", "sku")
 		if (result.length > 0) {
 			res.status(200).json(SuccessResponse(result[0]))
 		} else {

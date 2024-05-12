@@ -24,7 +24,7 @@ export const GetNewsLetters = async (req: Request, res: Response) => {
 		)
 		const totalPages = Math.ceil(count / limit)
 		if (rows) {
-			res.json(PaginationResponse(rows, Number(count), totalPages, page)).status(200)
+			res.status(200).json(PaginationResponse(rows, Number(count), totalPages, page))
 		} else {
 			res.status(NotFoundError().status).json(NotFoundError().data)
 		}
@@ -51,16 +51,16 @@ export const CreateNewsletter = async (req: Request, res: Response) => {
 			const response = await SendMailNewsletter(emailData.email)
 			console.log(response)
 			if (response.length > 0) {
-				res.json(SuccessCreate(result)).status(200)
+				res.status(200).json(SuccessCreate(result))
 			}
 		}
 	} catch (error) {
 		console.error(error)
 		if (error instanceof ZodError) {
-			res.json(UnprocessableEntityError(error)).status(422)
+			res.status(422).json(UnprocessableEntityError(error))
 		} else if (error instanceof DatabaseError) {
 			if (error.code === "23505") {
-				res.json(ConflictError()).status(409)
+				res.status(409).json(ConflictError())
 			}
 		} else {
 			res.status(500).json(ServerError())
@@ -73,7 +73,7 @@ export const DeleteNewsletter = async (req: Request, res: Response) => {
 	try {
 		const result = await DeleteRecordByID<INewsletter>(Number(id), "newsletters")
 		if (result) {
-			res.json(SuccessDelete()).status(200)
+			res.status(200).json(SuccessDelete())
 		} else {
 			res.status(NotFoundError().status).json(NotFoundError().data)
 		}

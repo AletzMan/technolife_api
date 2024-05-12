@@ -94,8 +94,9 @@ export const UpdateUser = async (req: Request, res: Response) => {
 			"datebirth",
 			"phonenumber",
 		])
+		const user = await QueryRecordByID<IUser>(id, "users")
 		if (result) {
-			res.status(200).json(SuccessUpdate(result))
+			res.status(200).json(SuccessUpdate(user[0]))
 		}
 	} catch (error) {
 		console.error(error)
@@ -156,7 +157,7 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 
 		//----DESCIFRAR LOS PASSWORDS ANTERIORES----//
 		const oldPasswordsDecript = [] as PasswordType[]
-		userToUpdate[0].oldPasswords?.forEach((element) => {
+		userToUpdate[0].oldpasswords?.forEach((element) => {
 			const passDecrypt = crypt.decrypt(element.password)
 			oldPasswordsDecript.push({ password: passDecrypt })
 		})
@@ -177,7 +178,7 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 
 		//----ENCRIPTAR EL NUEVO PASSWORD Y LOS PASSWORDS ANTERIORES----//
 		const passwordCrypt = crypt.encrypt(userData.newPassword)
-		const oldPasswords = userToUpdate[0].oldPasswords
+		const oldPasswords = userToUpdate[0].oldpasswords
 
 		const updateOldPasswords = oldPasswords
 			? [...oldPasswords, { password: actualPassword }]
@@ -355,20 +356,26 @@ export const GetAllAddress = async (_req: Request, res: Response) => {
 
 export const AddAddress = async (req: Request, res: Response) => {
 	try {
-		const data = req.body
-		const addressData = addressSchema.parse(data)
-		const result = await CreateRecord<IAddress>("shipping_address", addressData, [
-			"user_id",
-			"name",
-			"last_name",
-			"phone_number",
-			"street_name",
-			"street_number",
-			"postal_code",
-			"colonia",
-			"city",
-			"state",
-		])
+		const { deliveryAddress } = req.body
+		const { id } = req.params
+		const addressData = addressSchema.parse(deliveryAddress)
+
+		const result = await CreateRecord<IAddress>(
+			"shipping_address",
+			{ ...addressData, user_id: id },
+			[
+				"user_id",
+				"name",
+				"last_name",
+				"phone_number",
+				"street_name",
+				"street_number",
+				"postal_code",
+				"colonia",
+				"city",
+				"state",
+			]
+		)
 		if (result) {
 			res.status(201).json(SuccessCreate(result))
 		}
@@ -385,8 +392,9 @@ export const AddAddress = async (req: Request, res: Response) => {
 export const UpdateAddress = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params
-		const data = req.body
-		const addressData = addressSchema.parse(data)
+		const { deliveryAddress } = req.body
+
+		const addressData = addressSchema.parse(deliveryAddress)
 		const result = await UpdateRecordByID<IAddress>(id, "shipping_address", addressData, [
 			"user_id",
 			"name",
@@ -401,7 +409,7 @@ export const UpdateAddress = async (req: Request, res: Response) => {
 		])
 		console.log(result)
 		if (result) {
-			res.status(201).json(SuccessUpdate(result))
+			res.status(200).json(SuccessUpdate(result))
 		} else {
 			res.status(NotFoundError().status).json(NotFoundError().data)
 		}

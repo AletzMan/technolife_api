@@ -40,6 +40,21 @@ export const GetCoupon = async (req: Request, res: Response) => {
 	}
 }
 
+export const GetCouponValidate = async (req: Request, res: Response) => {
+	const { id } = req.params
+	try {
+		const result = await QueryRecordByID<ICoupon>(id, "coupons", "code")
+		if (result.length > 0) {
+			res.status(200).json(SuccessResponse(result[0]))
+		} else {
+			res.status(NotFoundError().status).json(NotFoundError().data)
+		}
+	} catch (error) {
+		console.error(error)
+		res.status(500).json(ServerError())
+	}
+}
+
 export const CreateCoupon = async (req: Request, res: Response) => {
 	try {
 		const data = couponSchema.parse(req.body)

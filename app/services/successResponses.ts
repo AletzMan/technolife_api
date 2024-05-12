@@ -25,7 +25,7 @@ export const PaginationResponseProducts = (
 	minPrice: number,
 	maxPrice: number,
 	categories: number[],
-	subcategories: number[],
+	subCategories: number[],
 	numberCategories: number[],
 	numberBrands: number[],
 	numberSubCategories: number[]
@@ -41,7 +41,7 @@ export const PaginationResponseProducts = (
 			minPrice,
 			maxPrice,
 			categories,
-			subcategories,
+			subCategories,
 			numberCategories,
 			numberBrands,
 			numberSubCategories,

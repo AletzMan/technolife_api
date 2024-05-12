@@ -5,7 +5,6 @@ import {
 	CreateRecord,
 	DeleteRecordByID,
 	DeleteRecordByParams,
-	QueryAllRecords,
 	QueryRecordByID,
 	UpdateRecordByID,
 } from "../services/querys"
@@ -16,7 +15,12 @@ import {
 	SuccessResponse,
 	SuccessUpdate,
 } from "../services/successResponses"
-import { NotFoundError, ServerError, UnprocessableEntityError } from "../services/errorResponses"
+import {
+	ConflictError,
+	NotFoundError,
+	ServerError,
+	UnprocessableEntityError,
+} from "../services/errorResponses"
 import { userNewSchema } from "../validations/userNewSchema"
 import { ZodError } from "zod"
 import { IFavorite } from "../Interfaces/favorite"
@@ -27,6 +31,7 @@ import { IAddress } from "../Interfaces/address"
 import { authorizationSchema } from "../validations/authorizationSchema"
 import { useEditSchema } from "../validations/userEditSchema"
 import { BuildQueryPagination } from "../services/BuildQueryPagination"
+import { sign } from "../services/jwt_sign_verify"
 
 type PasswordType = {
 	password: string
@@ -71,20 +76,37 @@ export const GetCustomerById = async (req: Request, res: Response) => {
 
 export const CreateCustomer = async (req: Request, res: Response) => {
 	try {
+		console.log(req.body)
 		const data = userNewSchema.parse(req.body)
-		const result = await CreateRecord<IUser>("customers", data, [
+		const { confirmPassword, ...newData } = data
+		const result = await CreateRecord<IUser>("customers", { ...newData, privileges: 0 }, [
 			"name",
 			"lastname",
 			"email",
 			"password",
+			"privileges",
 		])
 		if (result) {
-			res.status(201).json(SuccessCreate(result))
+			const token = await sign(KEY_SECRET, KEY_SECRET, 30)
+			/*const tokenSerialized = serialize("seccesfulRegister", token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "strict",
+				maxAge: 30,
+				path: "/",
+			})*/
+
+			res.cookie("seccesfulRegister", token, { maxAge: 30000, httpOnly: true })
+			res.json(SuccessCreate(result))
 		}
 	} catch (error) {
 		console.error(error)
 		if (error instanceof ZodError) {
 			res.status(422).json(UnprocessableEntityError(error.issues))
+		} else if (error instanceof DatabaseError) {
+			if (error.code === "23505") {
+				res.status(409).json(ConflictError())
+			}
 		} else {
 			res.status(500).json(ServerError())
 		}
@@ -163,7 +185,7 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 
 		//----DESCIFRAR LOS PASSWORDS ANTERIORES----//
 		const oldPasswordsDecript = [] as PasswordType[]
-		userToUpdate[0].oldPasswords?.forEach((element) => {
+		userToUpdate[0].oldpasswords?.forEach((element) => {
 			const passDecrypt = crypt.decrypt(element.password)
 			oldPasswordsDecript.push({ password: passDecrypt })
 		})
@@ -184,7 +206,7 @@ export const UpdatePassword = async (req: Request, res: Response) => {
 
 		//----ENCRIPTAR EL NUEVO PASSWORD Y LOS PASSWORDS ANTERIORES----//
 		const passwordCrypt = crypt.encrypt(userData.newPassword)
-		const oldPasswords = userToUpdate[0].oldPasswords
+		const oldPasswords = userToUpdate[0].oldpasswords
 
 		const updateOldPasswords = oldPasswords
 			? [...oldPasswords, { password: actualPassword }]
@@ -346,9 +368,10 @@ export const GetAddressById = async (req: Request, res: Response) => {
 	}
 }
 
-export const GetAllAddress = async (_req: Request, res: Response) => {
+export const GetAllAddress = async (req: Request, res: Response) => {
+	const { id } = req.params
 	try {
-		const result = await QueryAllRecords<IAddress>("shipping_address")
+		const result = await QueryRecordByID<IAddress>(id, "shipping_address", "user_id")
 		if (result) {
 			res.status(200).json(SuccessResponse(result))
 		} else {
@@ -363,6 +386,7 @@ export const GetAllAddress = async (_req: Request, res: Response) => {
 export const AddAddress = async (req: Request, res: Response) => {
 	try {
 		const data = req.body
+		console.log("DATA ADD", data)
 		const addressData = addressSchema.parse(data)
 		const result = await CreateRecord<IAddress>("shipping_address", addressData, [
 			"user_id",
@@ -408,7 +432,7 @@ export const UpdateAddress = async (req: Request, res: Response) => {
 		])
 		console.log(result)
 		if (result) {
-			res.status(201).json(SuccessUpdate(result))
+			res.status(200).json(SuccessUpdate(result))
 		} else {
 			res.status(NotFoundError().status).json(NotFoundError().data)
 		}

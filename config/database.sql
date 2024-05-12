@@ -99,8 +99,10 @@ CREATE TABLE orders (
 CREATE TABLE order_details (
   id SERIAL PRIMARY KEY UNIQUE,
   order_id varchar(20) DEFAULT NULL,
-  item_id varchar(10) DEFAULT NULL,
+  item_id varchar(100) DEFAULT NULL,
   quantity int DEFAULT NULL,
+  unit_price numeric(6,1),
+  title varchar(20) DEFAULT NULL,
   CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
