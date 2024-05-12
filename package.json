@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "ts-node app/index.ts",
-    "build": "tsc",
+    "build": "ts-node build --output public",
     "tsc": "tsc",
     "dev": "ts-node-dev app/index.ts"
   },
