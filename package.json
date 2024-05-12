@@ -5,10 +5,10 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node build/app/index.js",
+    "start": "node build/index.js",
     "build": "tsc",
     "tsc": "tsc",
-    "dev": "ts-node-dev app/index.ts"
+    "dev": "ts-node-dev index.ts"
   },
   "author": "Alejandro Garcia",
   "license": "ISC",
