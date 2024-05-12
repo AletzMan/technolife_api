@@ -1,18 +1,18 @@
 {
-    "versión": 2,
-    "compilaciones": [
+    "version": 2,
+    "builds": [
         {
             "src": "build/index.js",
-            "uso": "@now/node",
+            "use": "@now/node",
             "config": {
                 "maxLambdaSize": "15mb"
             }
         }
     ],
-    "rutas": [
+    "routes": [
         {
             "src": "/(.*) ",
-            "destino": "/build/index.js"
+            "dest": "/build/index.js"
         }
     ]
 }
