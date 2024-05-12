@@ -56,6 +56,14 @@ export const ConflictError = () => {
 	}
 	//.status(409)
 }
+export const GoneError = () => {
+	return {
+		error: true,
+		message: "Gone",
+		description: "The requested resource is no longer available. Please update your links.",
+	}
+	//.status(409)
+}
 
 export const UnprocessableEntityError = (issues: unknown) => {
 	return {

@@ -19,7 +19,7 @@ interface PaginationResultProducts {
 	minPrice: number
 	maxPrice: number
 	categories: number[]
-	subcategories: number[]
+	subCategories: number[]
 	numberCategories: number[]
 	numberBrands: number[]
 	numberSubCategories: number[]
@@ -308,7 +308,7 @@ export const BuildQueryPaginationProducts = async <T extends QueryResultRow>(
 		minPrice,
 		maxPrice,
 		categories: arrayCategories,
-		subcategories: arraySubCategories,
+		subCategories: arraySubCategories,
 		numberCategories,
 		numberBrands,
 		numberSubCategories,

@@ -28,6 +28,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/cookie": "^0.6.0",
     "@types/cors": "^2.8.17",
     "@types/morgan": "^1.9.9",
     "@types/nodemailer": "^6.4.14",

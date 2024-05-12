@@ -67,3 +67,8 @@ export interface IProductNew {
 	minimun_inventory_quantity: number
 	sold_quantity: number
 }
+
+export interface IProductsCart {
+	product: IProduct
+	quantity: number
+}
