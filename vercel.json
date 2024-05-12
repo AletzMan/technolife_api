@@ -1,8 +1,9 @@
 {
+    "version": 2,
     "rewrites": [
         {
-            "source": "/build/(.*)",
-            "destination": "/build/index.js"
+            "source": "/(.*)",
+            "destination": "/api"
         }
     ]
 }
