@@ -1,9 +1,18 @@
 {
-    "version": 2,
-    "rewrites": [
+    "versión": 2,
+    "compilaciones": [
         {
-            "source": "/build/(.*)",
-            "destination": "/build"
+            "src": "build/index.js",
+            "uso": "@now/node",
+            "config": {
+                "maxLambdaSize": "15mb"
+            }
+        }
+    ],
+    "rutas": [
+        {
+            "src": "/(.*) ",
+            "destino": "/build/index.js"
         }
     ]
 }
