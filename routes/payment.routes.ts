@@ -3,6 +3,6 @@ import { PaymentPaypal } from "../controllers/payment.controller"
 
 const router = Router()
 
-router.get("/payment", PaymentPaypal)
+router.post("/payment", PaymentPaypal)
 
 export default router
