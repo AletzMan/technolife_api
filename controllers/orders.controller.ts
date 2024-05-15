@@ -1,17 +1,33 @@
 import { Request, Response } from "express"
 import { INewOrder, IOrder } from "../Interfaces/order"
-import { PaginationResponse, SuccessCreate, SuccessResponse } from "../services/successResponses"
+import {
+	PaginationResponseOrders,
+	SuccessCreate,
+	SuccessResponse,
+} from "../services/successResponses"
 import { NotFoundError, ServerError, UnprocessableEntityError } from "../services/errorResponses"
-import { BuildQueryPagination } from "../services/BuildQueryPagination"
-import { CreateRecord, QueryRecordByID, TotalRecords } from "../services/querys"
+import { BuildQueryPaginationOrders } from "../services/BuildQueryPagination"
+import { CreateRecord, QueryRecordByID, TotalRecords, UpdateRecordByID } from "../services/querys"
 import { ZodError } from "zod"
 
 export const GetOrders = async (req: Request, res: Response) => {
 	try {
-		const { count, limit, rows, page } = await BuildQueryPagination<IOrder>(req, [""], "orders")
+		const { count, limit, rows, page, on_the_way, pending, delivered, cancelled } =
+			await BuildQueryPaginationOrders<IOrder>(req, [""], "orders")
 		const totalPages = Math.ceil(count / limit)
 		if (rows) {
-			res.status(200).json(PaginationResponse(rows, Number(count), totalPages, page))
+			res.status(200).json(
+				PaginationResponseOrders(
+					rows,
+					Number(count),
+					totalPages,
+					page,
+					on_the_way,
+					pending,
+					delivered,
+					cancelled
+				)
+			)
 		} else {
 			res.status(NotFoundError().status).json(NotFoundError().data)
 		}
@@ -51,9 +67,25 @@ export const GetOrderById = async (req: Request, res: Response) => {
 	}
 }
 
-export const TotalOrders = async (req: Request, res: Response) => {
-	const { customer_id } = req.query
-	console.log(customer_id)
+export const UpdateOrder = async (req: Request, res: Response) => {
+	const { id } = req.params
+	const data = req.body
+	console.log(data.state)
+	try {
+		const result = await UpdateRecordByID(id, "orders", { state: data.state }, ["state"])
+		if (result) {
+			res.status(200).json(SuccessResponse({}))
+		} else {
+			res.status(NotFoundError().status).json(NotFoundError().data)
+		}
+	} catch (error) {
+		console.error(error)
+		res.status(500).json(ServerError())
+	}
+}
+
+export const TotalOrders = async (_req: Request, res: Response) => {
+	//const { customer_id } = req.query
 	try {
 		const result = await TotalRecords("orders")
 
@@ -72,7 +104,6 @@ export const CreateOrder = async (req: Request, res: Response) => {
 	try {
 		const data = req.body as INewOrder
 		const ACTUAL_DATE = new Date().toISOString().slice(0, 19).replace("T", " ")
-		console.log(data)
 		const newData = {
 			order_id: data.order_id,
 			user_id: data.user_id,
@@ -81,8 +112,7 @@ export const CreateOrder = async (req: Request, res: Response) => {
 			total_price: data.total_price,
 			name: data.name,
 		}
-		console.log(newData)
-		console.log(data.products)
+
 		const result = await CreateRecord<IOrder>("orders", newData, [
 			"order_id",
 			"user_id",
