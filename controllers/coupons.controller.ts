@@ -1,23 +1,27 @@
 import { Request, Response } from "express"
+import { CreateRecord, DeleteRecordByID, QueryRecordByID } from "../services/querys"
 import {
-	CreateRecord,
-	DeleteRecordByID,
-	QueryAllRecords,
-	QueryRecordByID,
-} from "../services/querys"
-import { SuccessCreate, SuccessDelete, SuccessResponse } from "../services/successResponses"
+	PaginationResponse,
+	SuccessCreate,
+	SuccessDelete,
+	SuccessResponse,
+} from "../services/successResponses"
 import { NotFoundError, ServerError, UnprocessableEntityError } from "../services/errorResponses"
 import { ZodError } from "zod"
 import { ICoupon } from "../Interfaces/coupon"
 import { couponSchema } from "../validations/couponSchema"
+import { BuildQueryPagination } from "../services/BuildQueryPagination"
 
-export const GetAllCoupons = async (req: Request<{}, {}, {}, ICoupon>, res: Response) => {
+export const GetAllCoupons = async (req: Request, res: Response) => {
 	try {
-		const result = await QueryAllRecords<ICoupon>("coupons", req)
-		if (result) {
-			res.status(200).json(SuccessResponse(result))
-		} else {
-			res.status(200).json(SuccessResponse([]))
+		const { rows, page, count, limit } = await BuildQueryPagination<ICoupon>(
+			req,
+			["code", "description"],
+			"coupons"
+		)
+		const totalPages = Math.ceil(count / limit)
+		if (rows) {
+			res.status(200).json(PaginationResponse(rows, count, totalPages, page))
 		}
 	} catch (error) {
 		console.log(error)
