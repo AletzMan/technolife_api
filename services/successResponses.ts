@@ -15,6 +15,31 @@ export const PaginationResponse = (
 	}
 	//.status(200)
 }
+export const PaginationResponseOrders = (
+	results: unknown,
+	totalResults: number,
+	totalPages: number,
+	currentPage: number,
+	on_the_way: number,
+	pending: number,
+	delivered: number,
+	cancelled: number
+) => {
+	return {
+		error: false,
+		response: {
+			results,
+			totalResults,
+			totalPages,
+			currentPage,
+			on_the_way,
+			pending,
+			delivered,
+			cancelled,
+		},
+	}
+	//.status(200)
+}
 
 export const PaginationResponseProducts = (
 	results: unknown,
