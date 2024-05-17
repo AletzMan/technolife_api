@@ -93,6 +93,8 @@ export const UpdateUser = async (req: Request, res: Response) => {
 		const user = await QueryRecordByID<IUser>(id, "users")
 		if (result) {
 			res.status(200).json(SuccessUpdate(user[0]))
+		} else {
+			res.status(NotFoundError().status).json(NotFoundError().data)
 		}
 	} catch (error) {
 		console.error(error)
@@ -273,6 +275,8 @@ export const AddFavorite = async (req: Request, res: Response) => {
 		])
 		if (result) {
 			res.status(201).json(SuccessCreate(result))
+		} else {
+			res.status(404).json(SuccessResponse(result))
 		}
 	} catch (error) {
 		console.error(error)
