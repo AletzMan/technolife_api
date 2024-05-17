@@ -16,6 +16,7 @@ import brand from "../routes/brand.routes"
 import customers from "../routes/customers.routes"
 import coupons from "../routes/coupons.routes"
 import main from "../routes/main.routes"
+import swaggerConfig from "../config/swaggerConfig"
 
 dotenv.config()
 const PORT = process.env.PORT
@@ -23,13 +24,14 @@ const PORT = process.env.PORT
 const app = express()
 
 dotenv.config()
+swaggerConfig(app)
 app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(
 	cors({
 		origin: process.env.FRONT_END_URL,
-		credentials: true,
+		credentials: false,
 		optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 	})
 )
