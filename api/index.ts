@@ -16,7 +16,8 @@ import brand from "../routes/brand.routes"
 import customers from "../routes/customers.routes"
 import coupons from "../routes/coupons.routes"
 import main from "../routes/main.routes"
-import swaggerConfig from "../config/swaggerConfig"
+import swaggerUi from "swagger-ui-express"
+import swaggerSpec from "../config/swaggerConfig"
 
 dotenv.config()
 const PORT = process.env.PORT
@@ -24,7 +25,6 @@ const PORT = process.env.PORT
 const app = express()
 
 dotenv.config()
-swaggerConfig(app)
 app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -56,6 +56,7 @@ app.use("/api", orders)
 app.use("/api", brand)
 app.use("/api", customers)
 app.use("/api", coupons)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 app.listen(PORT, () => {
 	console.log("Server running at PORT: ", PORT)

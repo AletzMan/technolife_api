@@ -1,6 +1,7 @@
+import path from "path"
 import swaggerJSDoc from "swagger-jsdoc"
-import swaggerUi from "swagger-ui-express"
-import { Express } from "express"
+//import swaggerUi from "swagger-ui-express"
+//import { Express } from "express"
 
 const options: swaggerJSDoc.Options = {
 	definition: {
@@ -42,13 +43,13 @@ const options: swaggerJSDoc.Options = {
 			},
 		},
 	},
-	apis: ["./routes/*.ts"], // Ruta a tus archivos de rutas
+	apis: [`${(path.join(__dirname), "./routes/*")}`], // Ruta a tus archivos de rutas
 }
 
 const swaggerSpec = swaggerJSDoc(options)
 
-const swaggerConfig = (app: Express) => {
-	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-}
+//const swaggerConfig = (app: Express) => {
+//	app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+//}
 
-export default swaggerConfig
+export default swaggerSpec
