@@ -58,7 +58,13 @@ app.use("/api", orders)
 app.use("/api", brand)
 app.use("/api", customers)
 app.use("/api", coupons)
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use(
+	"/api-docs",
+	swaggerUi.serve,
+	swaggerUi.setup(swaggerSpec, {
+		customCssUrl: "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
+	})
+)
 
 app.listen(PORT, () => {
 	console.log("Server running at PORT: ", PORT)
