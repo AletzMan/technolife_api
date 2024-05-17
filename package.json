@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node ./build/index.js",
-    "prebuild": "npm run swagger",
+    "start": "node ./build/api/index.js",
     "build": "tsc",
     "tsc": "tsc",
     "dev": "ts-node-dev api/index.ts"
@@ -40,6 +39,7 @@
     "@types/paypal__checkout-server-sdk": "^1.0.8",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
+    "concurrently": "^8.2.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.4.5"
   }
