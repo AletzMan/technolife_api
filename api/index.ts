@@ -18,7 +18,7 @@ import coupons from "../routes/coupons.routes"
 import main from "../routes/main.routes"
 import swaggerUi from "swagger-ui-express"
 import swaggerSpec from "../config/swaggerConfig"
-//const swaggerUiAssetPath = require("swagger-ui-dist").getAbsoluteFSPath()
+const swaggerUiAssetPath = require("swagger-ui-dist").getAbsoluteFSPath()
 
 dotenv.config()
 const PORT = process.env.PORT
@@ -28,7 +28,7 @@ const app = express()
 dotenv.config()
 app.use(morgan("dev"))
 app.use(express.json())
-//app.use(express.static(swaggerUiAssetPath))
+app.use(express.static(swaggerUiAssetPath))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname))
 /*app.use("*.css", (_req, res, next) => {
