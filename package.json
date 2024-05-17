@@ -6,6 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": "node ./build/index.js",
+    "prebuild": "npm run swagger",
     "build": "tsc",
     "tsc": "tsc",
     "dev": "ts-node-dev api/index.ts"
