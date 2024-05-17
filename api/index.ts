@@ -31,10 +31,10 @@ app.use(express.json())
 app.use(express.static(swaggerUiAssetPath))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname))
-/*app.use("*.css", (_req, res, next) => {
+app.use("*.css", (_req, res, next) => {
 	res.set("Content-Type", "text/css")
 	next()
-})*/
+})
 /*app.use(
 	cors({
 		origin: process.env.FRONT_END_URL,
@@ -63,7 +63,11 @@ app.use("/api", orders)
 app.use("/api", brand)
 app.use("/api", customers)
 app.use("/api", coupons)
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use(
+	"/api-docs",
+	swaggerUi.serve,
+	swaggerUi.setup(swaggerSpec, { customCss: ".swagger-ui .topbar { display: none }" })
+)
 
 app.listen(PORT, () => {
 	console.log("Server running at PORT: ", PORT)
