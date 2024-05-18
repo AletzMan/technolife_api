@@ -1,3 +1,4 @@
+export const cssStyle = `
 .swagger-ui {
 	color: #3b4151;
 	font-family: sans-serif; /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
@@ -11812,3 +11813,5 @@
 }
 
 /*# sourceMappingURL=swagger-ui.css.map*/
+
+`
