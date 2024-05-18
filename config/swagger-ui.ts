@@ -11155,7 +11155,7 @@ export const cssStyle = `
 }
 
 .swagger-ui .topbar .download-url-wrapper {
-	display: flex;
+	display: none;
 	flex: 3;
 	justify-content: flex-end;
 }
