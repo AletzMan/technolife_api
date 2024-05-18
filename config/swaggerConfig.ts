@@ -1,5 +1,6 @@
 import path from "path"
 import swaggerJSDoc from "swagger-jsdoc"
+import { Brand, Category, User } from "../schemas/schemas"
 //import swaggerUi from "swagger-ui-express"
 //import { Express } from "express"
 
@@ -13,33 +14,9 @@ const options: swaggerJSDoc.Options = {
 		},
 		components: {
 			schemas: {
-				User: {
-					type: "object",
-					properties: {
-						id: { type: "number" },
-						name: { type: "string" },
-						lastname: { type: "string" },
-						email: { type: "string" },
-						password: { type: "string" },
-						oldpasswords: {
-							type: "array",
-							items: {
-								type: "object",
-								properties: {
-									password: { type: "string" },
-								},
-							},
-						},
-						token_reset_password: { type: "string" },
-						privileges: { type: "number" },
-						datebirth: { type: "string" },
-						phonenumber: { type: "number" },
-						favorites: {
-							type: "array",
-							items: { type: "string" },
-						},
-					},
-				},
+				User,
+				Brand,
+				Category,
 			},
 		},
 	},

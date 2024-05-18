@@ -19,7 +19,7 @@ const router = Router()
  * @swagger
  * /api/categories:
  *   get:
- *     summary: Retrieve all categories
+ *     summary: Retrieve a list of categories
  *     tags: [Categories]
  *     responses:
  *       200:
@@ -27,9 +27,65 @@ const router = Router()
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Category'
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: false
+ *                 response:
+ *                   type: object
+ *                   properties:
+ *                     results:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Category'
+ *                     totalResults:
+ *                       type: integer
+ *                       example: 100
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 10
+ *                     currentPage:
+ *                       type: integer
+ *                       example: 1
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Bad request"
+ *                 description:
+ *                   type: string
+ *                   example: "The request could not be understood by the server due to malformed syntax."
+ *                 status:
+ *                   type: integer
+ *                   example: 400
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 description:
+ *                   type: string
+ *                   example: "The server encountered an unexpected condition that prevented it from fulfilling the request."
+ *                 status:
+ *                   type: integer
+ *                   example: 500
  */
 router.get("/categories", GetAllCategories)
 
