@@ -18,6 +18,7 @@ import coupons from "../routes/coupons.routes"
 import main from "../routes/main.routes"
 import swaggerUi from "swagger-ui-express"
 import swaggerSpec from "../config/swaggerConfig"
+import { cssStyle } from "../config/swagger-ui"
 const swaggerUiAssetPath = require("swagger-ui-dist").getAbsoluteFSPath()
 
 dotenv.config()
@@ -63,11 +64,7 @@ app.use("/api", orders)
 app.use("/api", brand)
 app.use("/api", customers)
 app.use("/api", coupons)
-app.use(
-	"/api-docs",
-	swaggerUi.serve,
-	swaggerUi.setup(swaggerSpec, { customCssUrl: `../config/swagger-ui.css` })
-)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { customCss: cssStyle }))
 
 app.listen(PORT, () => {
 	console.log("Server running at PORT: ", PORT)
