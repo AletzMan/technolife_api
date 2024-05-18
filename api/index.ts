@@ -66,7 +66,7 @@ app.use("/api", coupons)
 app.use(
 	"/api-docs",
 	swaggerUi.serve,
-	swaggerUi.setup(swaggerSpec, { customCss: ".swagger-ui .topbar { display: none }" })
+	swaggerUi.setup(swaggerSpec, { customCssUrl: `../config/swagger-ui.css` })
 )
 
 app.listen(PORT, () => {
